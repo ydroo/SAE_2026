@@ -99,7 +99,7 @@ execute {
 		for (var j = 1; j <= nbNoeud; j++)
 			visiter[j] = 0;
   		write ("Vehicule ", String.fromCharCode(122 - nbvehicule + v), " : ");
-  		var route = "5";
+  		var route = "Dépôt";
   		var i = 1;
   		while(true)
   		{
@@ -111,17 +111,18 @@ execute {
   					visiter[j] = 1;
   					i = j;
   					if (j <= nbdepot)
-  						route += " -> " + String.fromCharCode(82 + j);
+  						route += " -> Dépôt";
   					else
-  						route += " -> " + String.fromCharCode(95 + j);
+  						route += " -> C" + (j - nbdepot);
   					found = 1;
   					break;
   				}
   			}
   			if (found != 1) break;
   		}
-  		if (route == "S")
-  			write("S -> Aucun déplacement effectué.");
+  		if (route == "Dépôt")
+  			//write("Dépôt -> Aucun déplacement effectué.");
+  			writeln();
   		else
   		{
   			writeln(route);
