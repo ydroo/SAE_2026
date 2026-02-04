@@ -7,7 +7,7 @@
 nbclient = 10;
 nbdepot = 1;
 
-nbvehicule = 3;
+nbvehicule = 4;
 
 qmax = 100;
 

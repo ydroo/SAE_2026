@@ -80,7 +80,7 @@ subject to {
 	// La capacité du véhicule ne peut être dépassée
 	forall (v in 1..nbvehicule)
 		sum(i in 1..nbNoeud, j in (nbdepot+1)..nbNoeud) demande[j-nbdepot]*x[i][j][v] <= qmax;
-	
+
 	//Calcul de la capacité restante au retour au dépôt
 	forall (v in 1..nbvehicule)
 		qapresretour[v] == qmax - sum(i in 1..nbNoeud, j in (nbdepot+1)..nbNoeud) demande [j-nbdepot] * x[i][j][v];
