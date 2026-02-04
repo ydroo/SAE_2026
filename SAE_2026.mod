@@ -7,14 +7,13 @@
 /*--------------------------------------------------------*/
 /*                 Définition des données                 */
 /*--------------------------------------------------------*/
+
 // Nombre de clients
 int nbclient = ...;
-
 // Nombre de dépôts
 int nbdepot = ...;
-
+// Calcul nombre de noeuds
 int nbNoeud = nbclient+nbdepot;
-
 // Nombre de véhicules
 int nbvehicule = ...;
 // Distance entre les noeuds (clients ou dépôt) i et j
@@ -86,7 +85,7 @@ subject to
 	forall (v in 1..nbvehicule)
 		sum(i in 1..nbNoeud, j in (nbdepot+1)..nbNoeud) demande[j-nbdepot]*x[i][j][v] <= qmax;
 
-	//Calcul de la capacité restante au retour au dépôt
+	// Calcul de la capacité restante au retour au dépôt
 	forall (v in 1..nbvehicule)
 		qapresretour[v] == qmax - sum(i in 1..nbNoeud, j in (nbdepot+1)..nbNoeud) demande [j-nbdepot] * x[i][j][v];
 }
@@ -101,11 +100,12 @@ main
 	for (var i = 1; i <= thisOplModel.nbclient; i++)
 		totDemande += thisOplModel.demande[i];
 
+	writeln("Demande totale des clients = ", totDemande);
+	writeln("Capacité des véhicules disponible = ", thisOplModel.nbvehicule * thisOplModel.qmax);
+	
 	if (totDemande > thisOplModel.nbvehicule * thisOplModel.qmax)
 	{
 		writeln("⚠️ PROBLÈME INFAISABLE");
-		writeln("Demande totale des clients = ", totDemande);
-		writeln("Capacité des véhicules disponible = ", thisOplModel.nbvehicule * thisOplModel.qmax);
 		writeln("Nombre de véhicules insuffisant → arrêt");
 	}
 
