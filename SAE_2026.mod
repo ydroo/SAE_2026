@@ -43,12 +43,16 @@ dvar int+ u[1..nbNoeud];
 
 dexpr float objectif = sum(i in 1..nbNoeud, j in 1..nbNoeud, v in 1..nbvehicule) dist[i][j] * x[i][j][v];
 minimize objectif;
+
 /*--------------------------------------------------------*/
 /*                      Contraintes                       */
 /*--------------------------------------------------------*/
-subject to {
+
+subject to
+{
 	// Un véhicule qui quitte le dépôt, retourne au dépôt à la fin de sa tournée
-	forall (v in 1..nbvehicule) {
+	forall (v in 1..nbvehicule)
+	{
 		sum(j in (nbdepot+1)..nbNoeud) x[j][1][v] == sum (j in (nbdepot+1).. nbNoeud) x[1][j][v];
 		sum(j in (nbdepot+1)..nbNoeud) x[j][1][v] <= 1;
 	}  
@@ -72,7 +76,8 @@ subject to {
 	// Elimination des sous-tours
 	forall (i in (nbdepot+1)..nbNoeud, j in (nbdepot+1)..nbNoeud, v in 1..nbvehicule : i!=j)
 		u[j]-u[i] >= demande [j-nbdepot] - qmax*(1-x[i][j][v]);
-	forall (i in (nbdepot+1)..nbNoeud){
+	forall (i in (nbdepot+1)..nbNoeud)
+	{
 		demande[i-1] <= u[i];
 		u[1] <= qmax;
 	}
@@ -87,33 +92,59 @@ subject to {
 }
 
 /*--------------------------------------------------------*/
-/*                 Paramètres d'affichage                 */
+/*           Test de la condition d'arrêt                 */
 /*--------------------------------------------------------*/
 
-execute {
+main
+{
+	var totDemande = 0;
+	for (var i = 1; i <= thisOplModel.nbclient; i++)
+		totDemande += thisOplModel.demande[i];
+
+	if (totDemande > thisOplModel.nbvehicule * thisOplModel.qmax)
+	{
+		writeln("⚠️ PROBLÈME INFAISABLE");
+		writeln("Demande totale des clients = ", totDemande);
+		writeln("Capacité des véhicules disponible = ", thisOplModel.nbvehicule * thisOplModel.qmax);
+		writeln("Nombre de véhicules insuffisant → arrêt");
+	}
+
+	writeln("Résolution lancée…");
+	thisOplModel.generate();
+
+	if (cplex.solve())
+		writeln("Solution trouvée, valeur objectif = ", cplex.getObjValue());
+	else
+		writeln("Aucune solution trouvée");
+
+/*--------------------------------------------------------*/
+/*                 Paramètres d'affichage                 */
+/*--------------------------------------------------------*/	
+	
 	// Utiliser un tableau scriptable pour suivre les noeuds visités
-	var visiter = new Array(nbNoeud + 1);
-	for (var v = 1; v <= nbvehicule; v++)
+	var visiter = new Array(thisOplModel.nbNoeud + 1);
+	for (var v = 1; v <= thisOplModel.nbvehicule; v++)
 	{
 		// Initialiser le tableay visiter pour chaque véhicule
-		for (var j = 1; j <= nbNoeud; j++)
+		for (var j = 1; j <= thisOplModel.nbNoeud; j++) 
 			visiter[j] = 0;
-  		write ("Vehicule ", String.fromCharCode(122 - nbvehicule + v), " : ");
+		
+  		write ("Vehicule ", String.fromCharCode(122 - thisOplModel.nbvehicule + v), " : ");
   		var route = "Dépôt";
   		var i = 1;
   		while(true)
   		{
   			var found = 0;
-  			for (var j = 1; j <= nbNoeud; j++)
+  			for (var j = 1; j <= thisOplModel.nbNoeud; j++)
   			{
-  				if ((j <= nbdepot || visiter [j] != 1) && x[i][j][v] == 1) 
+  				if ((j <= thisOplModel.nbdepot || visiter [j] != 1) && thisOplModel.x[i][j][v] == 1) 
   				{
   					visiter[j] = 1;
   					i = j;
-  					if (j <= nbdepot)
+  					if (j <= thisOplModel.nbdepot)
   						route += " -> Dépôt";
   					else
-  						route += " -> C" + (j - nbdepot);
+  						route += " -> C" + (j - thisOplModel.nbdepot);
   					found = 1;
   					break;
   				}
@@ -121,14 +152,12 @@ execute {
   			if (found != 1) break;
   		}
   		if (route == "Dépôt")
-  			//write("Dépôt -> Aucun déplacement effectué.");
-  			writeln();
+  			write(" ");
   		else
   		{
   			writeln(route);
-  			write("Capacité utilisée : ", (qmax - qapresretour[v]));
+  			write("Capacité utilisée : ", (thisOplModel.qmax - thisOplModel.qapresretour[v]));
   		}
   		writeln();
 	}
 }
-
