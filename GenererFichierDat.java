@@ -8,11 +8,12 @@ import java.util.Scanner;
 
 public class GenererFichierDat
 {
-	public static void genererFichierDat(String cheminSource, String cheminDest)
+	public static void main(String[] args)
 	{
 		try
 		{
-			Scanner sc = new Scanner(new File(cheminSource));
+			Scanner sc = new Scanner(new File(args[0]));
+			sc.useLocale(Locale.US);
 
 			// 1. Lecture des paramètres de l'instance
 			int    nbClients       = sc.nextInt();
@@ -35,25 +36,25 @@ public class GenererFichierDat
 			}
 
 			// 3. Calcul de la matrice des distances
-			PrintWriter writer = new PrintWriter(new FileWriter(cheminDest));
+			PrintWriter writer = new PrintWriter(new FileWriter(args[1]));
 
-			writer.println("nbClient = " + nbClients + ";");
-			writer.println("nbDepot = 1;");
+			writer.println("nbClient   = " + nbClients + ";");
+			writer.println("nbDepot    = 1;");
 			writer.println("nbVehicule = 10;");
-			writer.println("qMax = " + qMax + ";");
-			writer.println("demande = " + Arrays.toString(demandes) + ";");
+			writer.println("qMax       = " + qMax + ";");
+			writer.println("demande    = " + Arrays.toString(demandes) + ";");
 
 			writer.println("dist =");
 			writer.println("[");
 			for (int cpt = 0; cpt <= nbClients; cpt++)
 			{
-				writer.print("[");
+				writer.print("\t[");
 				for (int cpt2 = 0; cpt2 <= nbClients; cpt2++)
 				{
 					double distance = Math.sqrt(Math.pow(coordonnees[cpt][0]-coordonnees[cpt2][0], 2)
 									+ Math.pow(coordonnees[cpt][1]-coordonnees[cpt2][1], 2));
 
-					writer.printf(Locale.FRANCE, "%.2f", distance);
+					writer.printf(Locale.US, "%.2f", distance);
 					if (cpt2 < nbClients) { writer.print(", "); }
 				}
 
