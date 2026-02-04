@@ -40,11 +40,11 @@ public class GenererFichierDat
 
 			writer.println("nbClient   = " + nbClients + ";");
 			writer.println("nbDepot    = 1;");
-			writer.println("nbVehicule = 10;");
-			writer.println("qMax       = " + qMax + ";");
-			writer.println("demande    = " + Arrays.toString(demandes) + ";");
+			writer.println("nbVehicule = 10;\n");
+			writer.println("qMax       = " + qMax + ";\n");
+			writer.println("demande    = " + Arrays.toString(demandes) + ";\n");
 
-			writer.println("dist =");
+			writer.println("distance =");
 			writer.println("[");
 			for (int cpt = 0; cpt <= nbClients; cpt++)
 			{
