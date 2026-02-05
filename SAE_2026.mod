@@ -4,9 +4,9 @@
  * Date   : 02/02/2026
  *********************************************/
 
-/*--------------------------------------------------------*/
-/*                 Définition des données                 */
-/*--------------------------------------------------------*/
+/*********************************************
+ *           Définition des données
+ *********************************************/
 
 // Nombre de clients
 int nbclient = ...;
@@ -23,9 +23,9 @@ float demande[1..nbclient] = ...;
 // Capacité du véhicule v 
 int qmax = ...;
 
-/*--------------------------------------------------------*/
-/*                  Variables de décision                 */
-/*--------------------------------------------------------*/
+/*********************************************
+ *           Variables de décision
+ *********************************************/
 
 // xijv = 1 si le véhicule v passe directement du noeud i au noeud j, 0 sinon
 dvar boolean x[1..nbNoeud][1..nbNoeud][1..nbvehicule];
@@ -36,16 +36,17 @@ dvar int+ nbre;
 // Variables auxiliaires pour éliminer les sous-tours
 dvar int+ u[1..nbNoeud];
 
-/*--------------------------------------------------------*/
-/* Fonction objectif : minimiser la distance des tournées */
-/*--------------------------------------------------------*/
+/*********************************************
+ *             Fonction objectif :
+ *     Minimiser la distance des tournées
+ *********************************************/
 
 dexpr float objectif = sum(i in 1..nbNoeud, j in 1..nbNoeud, v in 1..nbvehicule) dist[i][j] * x[i][j][v];
 minimize objectif;
 
-/*--------------------------------------------------------*/
-/*                      Contraintes                       */
-/*--------------------------------------------------------*/
+/*********************************************
+ *                Contraintes
+ *********************************************/
 
 subject to
 {
@@ -90,9 +91,9 @@ subject to
 		qapresretour[v] == qmax - sum(i in 1..nbNoeud, j in (nbdepot+1)..nbNoeud) demande [j-nbdepot] * x[i][j][v];
 }
 
-/*--------------------------------------------------------*/
-/*              Test de la condition d'arrêt              */
-/*--------------------------------------------------------*/
+/*********************************************
+ *        Test de la condition d'arrêt
+ *********************************************/
 
 main
 {
@@ -117,9 +118,9 @@ main
 	else
 		writeln("Aucune solution trouvée");
 
-/*--------------------------------------------------------*/
-/*                 Paramètres d'affichage                 */
-/*--------------------------------------------------------*/	
+/*********************************************
+ *           Paramètres d'affichage
+ *********************************************/	
 	
 	// Utiliser un tableau scriptable pour suivre les noeuds visités
 	var visiter = new Array(thisOplModel.nbNoeud + 1);
