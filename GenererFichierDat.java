@@ -1,7 +1,7 @@
 import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
-
+import java.sql.Date;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Scanner;
@@ -38,13 +38,20 @@ public class GenererFichierDat
 			// 3. Calcul de la matrice des distances
 			PrintWriter writer = new PrintWriter(new FileWriter(args[1]));
 
+			Date date = new Date(System.currentTimeMillis());
+			writer.println("/*********************************************");
+			writer.println(" * OPL 22.1.1.0 Model");
+			writer.println(" * Auteur : Groupe 5");
+			writer.println(" * Date   : " + date);
+			writer.println(" *********************************************/\n");
+
 			writer.println("nbClient   = " + nbClients + ";");
 			writer.println("nbDepot    = 1;");
 			writer.println("nbVehicule = 10;\n");
 			writer.println("qMax       = " + qMax + ";\n");
 			writer.println("demande    = " + Arrays.toString(demandes) + ";\n");
 
-			writer.println("distance =");
+			writer.println("distance   =");
 			writer.println("[");
 			for (int cpt = 0; cpt <= nbClients; cpt++)
 			{
