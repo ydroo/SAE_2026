@@ -54,7 +54,7 @@ subject to
 	{
 		sum(j in (nbdepot+1)..nbNoeud) x[j][1][v] == sum (j in (nbdepot+1).. nbNoeud) x[1][j][v];
 		sum(j in (nbdepot+1)..nbNoeud) x[j][1][v] <= 1;
-	}  
+	}
 	
 	// Un véhicule ne peut pas faire de boucle sur un même noeud
 	forall (i in 1..nbNoeud, v in 1..nbvehicule)
@@ -91,7 +91,7 @@ subject to
 }
 
 /*--------------------------------------------------------*/
-/*           Test de la condition d'arrêt                 */
+/*              Test de la condition d'arrêt              */
 /*--------------------------------------------------------*/
 
 main
@@ -128,36 +128,35 @@ main
 		// Initialiser le tableay visiter pour chaque véhicule
 		for (var j = 1; j <= thisOplModel.nbNoeud; j++) 
 			visiter[j] = 0;
-		
-  		write ("Vehicule ", String.fromCharCode(122 - thisOplModel.nbvehicule + v), " : ");
-  		var route = "Dépôt";
-  		var i = 1;
-  		while(true)
-  		{
-  			var found = 0;
-  			for (var j = 1; j <= thisOplModel.nbNoeud; j++)
-  			{
-  				if ((j <= thisOplModel.nbdepot || visiter [j] != 1) && thisOplModel.x[i][j][v] == 1) 
-  				{
-  					visiter[j] = 1;
-  					i = j;
-  					if (j <= thisOplModel.nbdepot)
-  						route += " -> Dépôt";
-  					else
-  						route += " -> C" + (j - thisOplModel.nbdepot);
-  					found = 1;
-  					break;
-  				}
-  			}
-  			if (found != 1) break;
-  		}
-  		if (route == "Dépôt")
-  			write(" ");
-  		else
-  		{
-  			writeln(route);
-  			write("Capacité utilisée : ", (thisOplModel.qmax - thisOplModel.qapresretour[v]));
-  		}
-  		writeln();
+		var route = "Dépôt";
+		var i = 1;
+		while(true)
+		{
+			var found = 0;
+			for (var j = 1; j <= thisOplModel.nbNoeud; j++)
+			{
+				if ((j <= thisOplModel.nbdepot || visiter [j] != 1) && thisOplModel.x[i][j][v] == 1) 
+				{
+					visiter[j] = 1;
+					i = j;
+					if (j <= thisOplModel.nbdepot)
+						route += " -> Dépôt";
+					else
+						route += " -> C" + (j - thisOplModel.nbdepot);
+					found = 1;
+					break;
+				}
+			}
+			if (found != 1) break;
+		}
+		if (route == "Dépôt")
+			write(" ");
+		else
+		{
+			write ("Vehicule ", v, " : ");
+			writeln(route);
+			write("Capacité utilisée : ", (thisOplModel.qmax - thisOplModel.qapresretour[v]));
+		}
+		writeln();
 	}
 }
