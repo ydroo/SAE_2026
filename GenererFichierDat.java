@@ -61,7 +61,7 @@ public class GenererFichierDat
 					double distance = Math.sqrt(Math.pow(coordonnees[cpt][0]-coordonnees[cpt2][0], 2)
 									+ Math.pow(coordonnees[cpt][1]-coordonnees[cpt2][1], 2));
 
-					writer.printf(Locale.US, "%.2f", distance);
+					writer.printf(Locale.US, "%7.2f", distance);
 					if (cpt2 < nbClients) { writer.print(", "); }
 				}
 
